@@ -238,6 +238,11 @@
   .tab-panel:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: var(--radius-sm); }
   .os-note { font-size: 14px; color: var(--text-muted); margin-top: 12px; }
   .os-note b { color: var(--text); }
+  .howto { margin: 6px 0 16px; padding-left: 22px; display: grid; gap: 9px; }
+  .howto li { color: var(--text-muted); font-size: 14.5px; line-height: 1.65; padding-left: 4px; }
+  .howto li b { color: var(--text); }
+  .howto li::marker { color: var(--accent); font-family: var(--font-mono); font-weight: 600; }
+  .panel-lead { font-size: 14.5px; color: var(--text); font-weight: 600; margin: 4px 0 4px; }
   @media (prefers-reduced-motion: reduce) { .tab-btn { transition: none; } }
 
   /* ---------- footer ---------- */
@@ -384,6 +389,13 @@
         </div>
 
         <div class="tab-panel active" id="panel-win" role="tabpanel" aria-labelledby="tab-win" tabindex="0">
+          <p class="panel-lead">完全沒開過終端機?先照這 4 步打開它:</p>
+          <ol class="howto">
+            <li>按鍵盤左下角的 <b>⊞ Win 鍵</b>(或用滑鼠點工作列最左邊的開始按鈕)。</li>
+            <li>直接打字搜尋 <b>Terminal</b>(Windows 11)或 <b>PowerShell</b>(Windows 10)。</li>
+            <li>點搜尋結果最上面那個打開。看到一個深色視窗、裡面有游標在閃,就是它了。</li>
+            <li>把下面的指令<b>一行一行複製貼上</b>(在視窗裡按右鍵或 Ctrl+V),每貼一行按 <b>Enter</b> 執行,等它跑完再貼下一行。</li>
+          </ol>
           <div class="code">
             <div class="code-head"><span class="fname">PowerShell / Windows Terminal</span><span>powershell</span></div>
 <pre><code><span class="cmt"># 1. 用 winget(Windows 內建套件管理器)裝 Node.js</span>
@@ -395,7 +407,7 @@ npm install -g @openai/codex
 <span class="cmt"># 3. 登入(開啟瀏覽器用 ChatGPT 帳號授權)</span>
 codex login</code></pre>
           </div>
-          <p class="os-note">▪ 官方目前把 <b>Windows 支援標示為「實驗性(experimental)」</b>,大致可用但偶有狀況。<br>▪ 在 <b>PowerShell 或 Windows Terminal</b> 執行即可,原生效能最好。</p>
+          <p class="os-note">▪ 過程中若跳出「<b>是否允許這個 App 變更你的裝置</b>」的視窗,點「<b>是</b>」。<br>▪ 全部裝完,輸入 <code class="inl">node -v</code> 按 Enter,有看到版本號(像 <code class="inl">v22.x.x</code>)就成功了。<br>▪ 官方目前把 <b>Windows 支援標示為「實驗性(experimental)」</b>,大致可用但偶有小狀況;真的卡住可改用左邊的 WSL。</p>
         </div>
 
         <div class="tab-panel" id="panel-wsl" role="tabpanel" aria-labelledby="tab-wsl" tabindex="0">
@@ -453,10 +465,7 @@ cp .env.example .env</code></pre>
           <h4>啟動</h4>
           <div class="code">
             <div class="code-head"><span class="fname">終端機</span><span>bash</span></div>
-<pre><code>npm run dev
-
-<span class="cmt"># 或用 Docker</span>
-docker compose up --build</code></pre>
+<pre><code>npm run dev</code></pre>
           </div>
           <p>跑起來後,在 Telegram 對你的 bot 說句話試試。它會把回應和工具使用即時串流回來。</p>
         </div>
