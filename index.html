@@ -398,8 +398,9 @@
           </ol>
           <div class="code">
             <div class="code-head"><span class="fname">PowerShell / Windows Terminal</span><span>powershell</span></div>
-<pre><code><span class="cmt"># 1. 用 winget(Windows 內建套件管理器)裝 Node.js</span>
+<pre><code><span class="cmt"># 1. 用 winget(Windows 內建套件管理器)裝 Node.js 和 Git</span>
 winget install OpenJS.NodeJS.LTS
+winget install Git.Git
 
 <span class="cmt"># 2. 裝 Codex CLI</span>
 npm install -g @openai/codex
@@ -407,7 +408,7 @@ npm install -g @openai/codex
 <span class="cmt"># 3. 登入(開啟瀏覽器用 ChatGPT 帳號授權)</span>
 codex login</code></pre>
           </div>
-          <p class="os-note">▪ 過程中若跳出「<b>是否允許這個 App 變更你的裝置</b>」的視窗,點「<b>是</b>」。<br>▪ 全部裝完,輸入 <code class="inl">node -v</code> 按 Enter,有看到版本號(像 <code class="inl">v22.x.x</code>)就成功了。<br>▪ 官方目前把 <b>Windows 支援標示為「實驗性(experimental)」</b>,大致可用但偶有小狀況;真的卡住可改用左邊的 WSL。</p>
+          <p class="os-note">▪ 過程中若跳出「<b>是否允許這個 App 變更你的裝置</b>」的視窗,點「<b>是</b>」。<br>▪ <b>裝完 Node 和 Git 後,把終端機視窗關掉、重新開一個</b>,新指令才會生效。<br>▪ 確認成功:輸入 <code class="inl">node -v</code> 按 Enter,有看到版本號(像 <code class="inl">v22.x.x</code>)就對了。<br>▪ 官方目前把 <b>Windows 支援標示為「實驗性(experimental)」</b>,大致可用但偶有小狀況;真的卡住可改用左邊的 WSL。</p>
         </div>
 
         <div class="tab-panel" id="panel-wsl" role="tabpanel" aria-labelledby="tab-wsl" tabindex="0">
@@ -416,9 +417,9 @@ codex login</code></pre>
 <pre><code><span class="cmt"># 1. 啟用 WSL2 + Ubuntu(在 PowerShell 系統管理員,一次性,裝完重開機)</span>
 wsl --install
 
-<span class="cmt"># 2. 進入 Ubuntu 後,用 NodeSource 裝 Node.js 22</span>
+<span class="cmt"># 2. 進入 Ubuntu 後,用 NodeSource 裝 Node.js 22 和 Git</span>
 curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
-sudo apt-get install -y nodejs
+sudo apt-get install -y nodejs git
 
 <span class="cmt"># 3. 裝 Codex CLI 並登入</span>
 npm install -g @openai/codex
@@ -436,13 +437,21 @@ codex login</code></pre>
         </div>
 
         <div class="step reveal">
-          <h4>下載並安裝</h4>
+          <h4>下載 TeleCodex 並安裝(這就是橋接程式)</h4>
+          <p><strong>TeleCodex</strong> 就是把 Telegram 接上 Codex 的橋接程式。在剛剛那個終端機視窗裡,把下面指令<b>一行一行</b>貼上執行。它會把專案下載到你目前所在的資料夾:</p>
           <div class="code">
-            <div class="code-head"><span class="fname">終端機</span><span>bash</span></div>
-<pre><code><span class="cmt"># 取得專案後,在專案資料夾內</span>
+            <div class="code-head"><span class="fname">終端機(同一個視窗)</span><span>bash</span></div>
+<pre><code><span class="cmt"># 1. 用 git 把 TeleCodex 下載下來(會建立一個 telecodex 資料夾)</span>
+git clone https://github.com/benedict2310/telecodex.git
+
+<span class="cmt"># 2. 進到那個資料夾</span>
+cd telecodex
+
+<span class="cmt"># 3. 裝它需要的套件,並複製一份設定檔範本</span>
 npm install
 cp .env.example .env</code></pre>
           </div>
+          <p class="os-note">▪ <code class="inl">git clone</code> 就是「下載專案」;跑完你的資料夾裡會多出一個 <code class="inl">telecodex</code> 夾。<br>▪ <code class="inl">cd telecodex</code> 是「走進那個資料夾」,之後的指令都要在裡面執行。<br>▪ 不想用 git 也可以:到 <a href="https://github.com/benedict2310/telecodex" target="_blank" rel="noopener">GitHub 專案頁</a> 點綠色 <b>Code</b> 按鈕 → <b>Download ZIP</b>,解壓縮後再 <code class="inl">cd</code> 進那個資料夾(用 ZIP 下載時夾名可能叫 <code class="inl">telecodex-main</code>)。</p>
         </div>
 
         <div class="step reveal">
@@ -457,8 +466,8 @@ cp .env.example .env</code></pre>
         </div>
 
         <div class="step reveal">
-          <h4>讓 Codex 登入</h4>
-          <p>驗證方式二選一:在 Telegram 裡送 <code class="inl">/login</code> 走裝置授權流程(不必碰終端機),或在 <code class="inl">.env</code> 填 <code class="inl">CODEX_API_KEY</code> 走 API 金鑰。<strong>計費差很大,請先看第 5 節</strong>。</p>
+          <h4>確認 Codex 已登入</h4>
+          <p>你在前面「準備環境」那步已經跑過 <code class="inl">codex login</code> 了,TeleCodex 會直接沿用,不必再登一次。<br>(進階替代:也可以在 Telegram 送 <code class="inl">/login</code> 走裝置授權,或在 <code class="inl">.env</code> 填 <code class="inl">CODEX_API_KEY</code> 用 API 金鑰,<strong>但計費差很大,先看第 5 節</strong>。)</p>
         </div>
 
         <div class="step reveal">
